@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Migra GO</title>
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+</head>
+<body>
+    <div id="root"></div>
+    
+    <script type="text/babel">
+        const { useState } = React;
+        const { ChevronRight, AlertCircle, CheckCircle } = window;
+
+        function MigrantApp() {
+            const [step, setStep] = useState('welcome');
+            const [country, setCountry] = useState(null);
+            const [migrationType, setMigrationType] = useState(null);
+            const [currentProcess, setCurrentProcess] = useState(0);
+
+            const processes = {
+                spain_refugee: {
+                    title: "Refugiado en España - Primeros pasos",
+                    steps: [
+                        {
+                            number: 1,
+                            title: "Solicitud de Asilo",
+                            description: "Tu primer paso es solicitar asilo en una comisaría de policía nacional o puerto de entrada",
+                            details: [
+                                "Dirígete a: Comisaría de Policía Nacional más cercana",
+                                "Lleva: Documentos de identidad (pasaporte, cédula, etc.)",
+                                "Tiempo: 15-30 minutos",
+                                "Costo: GRATIS",
+                                "Te darán: Resguardo de solicitud de asilo"
+                            ],
+                            links: "Buscar comisaría: https://www.policia.es/",
+                            official: "Ministerio del Interior - España"
+                        },
+                        {
+                            number: 2,
+                            title: "Registro en el Sistema de Acogida",
+                            description: "Después de solicitar asilo, serás registrado en el sistema de acogida",
+                            details: [
+                                "¿Quién gestiona?: Cruz Roja / Cáritas / Ayuntamiento",
+                                "Lleva: Resguardo de asilo + documento identidad",
+                                "Te proporcionarán: Alojamiento temporal y asistencia básica",
+                                "Tiempo espera: 1-2 semanas",
+                                "Costo: GRATIS"
+                            ],
+                            links: "Contactar: Teléfono de Inmigración 024",
+                            official: "Ministerio Inclusión, Seguridad Social y Migraciones"
+                        },
+                        {
+                            number: 3,
+                            title: "Solicitud de Documento de Identidad de Solicitante",
+                            description: "Documento temporal mientras se resuelve tu solicitud de asilo",
+                            details: [
+                                "Dónde: Oficina de Extranjería más cercana",
+                                "Formulario: Solicitud de documento de identidad",
+                                "Documentos: Resguardo de asilo + fotografía carnet",
+                                "Costo: Entre 15-30€",
+                                "Tiempo: 1-2 semanas",
+                                "Te permitirá: Abrir cuenta bancaria y trabajar temporalmente"
+                            ],
+                            links: "Buscar oficina: https://www.inclusion.gob.es/",
+                            official: "Ministerio de Inclusión"
+                        }
+                    ]
+                },
+                spain_student_renewal: {
+                    title: "Renovación de Visado de Estudiante en España - Ahorra 300€",
+                    steps: [
+                        {
+                            number: 1,
+                            title: "Recopila tus documentos",
+                            description: "Estos son todos los documentos que NECESITAS (sin pagar a gestores)",
+                            details: [
+                                "Pasaporte original (válido)",
+                                "Certificado de empadronamiento (ayuntamiento: GRATIS)",
+                                "Comprobante de ingresos/fondos económicos",
+                                "Prueba de alojamiento",
+                                "Carta de universidad: que sigues inscrito",
+                                "Formulario EX-00 (descargable gratuitamente)",
+                                "Formulario de solicitud de prórroga"
+                            ],
+                            links: "Descargar formularios: https://www.inclusion.gob.es/",
+                            official: "Todos estos son TRÁMITES DE AUTOGESTIÓN"
+                        },
+                        {
+                            number: 2,
+                            title: "Pedir cita en la Oficina de Extranjería",
+                            description: "NO necesitas gestor, tú mismo puedes pedir cita",
+                            details: [
+                                "Entra en: https://www.inclusion.gob.es/cit",
+                                "Selecciona: Tu ciudad + tipo de trámite (prórroga estudiante)",
+                                "Elige: Fecha que mejor te vaya",
+                                "Guarda: Tu resguardo de cita (muy importante)",
+                                "Costo: GRATIS"
+                            ],
+                            links: "Sistema de citas: https://www.inclusion.gob.es/cit",
+                            official: "No confundas con portales FALSOS. Usa SOLO sitio oficial"
+                        },
+                        {
+                            number: 3,
+                            title: "Asiste a tu cita",
+                            description: "Lleva TODOS tus documentos originales",
+                            details: [
+                                "Fecha/Hora: La que reservaste",
+                                "Lugar: Oficina de Extranjería de tu provincia",
+                                "Documentos: Pasaporte + todos los que recopilaste",
+                                "Tiempo de espera: 15-30 minutos en cita",
+                                "Procesamiento: Algunos trámites se resuelven en el acto",
+                                "Costo: 15-20€ de tasa oficial"
+                            ],
+                            links: "Localizar tu oficina: https://www.inclusion.gob.es/",
+                            official: "La tasa oficial NUNCA será 300€"
+                        }
+                    ]
+                },
+                chile_arrival: {
+                    title: "Llegada a Chile - Primeros pasos",
+                    steps: [
+                        {
+                            number: 1,
+                            title: "Trámite de Entrada Migratoria",
+                            description: "Al llegar al aeropuerto/frontera",
+                            details: [
+                                "Dirígete a: Mostrador de Policía Internacional (PDI)",
+                                "Llevas: Pasaporte + visa (si la requiere tu país)",
+                                "Te sellarán: Pasaporte con entrada a Chile",
+                                "Tiempo: 10-20 minutos",
+                                "Costo: GRATIS",
+                                "Recibes: Comprobante de entrada"
+                            ],
+                            links: "Info PDI: https://www.pdi.cl/",
+                            official: "Policía de Investigaciones - Chile"
+                        },
+                        {
+                            number: 2,
+                            title: "Obtén tu RUN (Rol Único Nacional)",
+                            description: "Documento de identificación chileno fundamental",
+                            details: [
+                                "Dónde: Servicio de Registro Civil",
+                                "Documentos: Pasaporte + Certificado de Cuenta Corriente (después)",
+                                "Tiempo: 1 semana",
+                                "Costo: Entre 0-15 USD",
+                                "Sin RUN: No puedes trabajar, abrir cuenta, ni firmar contrato"
+                            ],
+                            links: "Ubicaciones: https://www.registrocivil.cl/",
+                            official: "Servicio de Registro Civil - Chile"
+                        }
+                    ]
+                }
+            };
+
+            const migrationTypes = [
+                { id: 'refugee', label: '🚨 Refugiado/Solicitante de Asilo' },
+                { id: 'student', label: '📚 Estudiante' },
+                { id: 'worker', label: '💼 Trabajador' },
+                { id: 'family', label: '👨‍👩‍👧‍👦 Reagrupación Familiar' },
+                { id: 'tourist', label: '✈️ Turista/Visitante' }
+            ];
+
+            if (step === 'welcome') {
+                return (
+                    <div className="max-w-2xl mx-auto p-6 bg-gradient-to-br from-blue-50 to-indigo-50 rounded-xl">
+                        <h1 className="text-4xl font-bold text-gray-900 mb-3">Migra GO</h1>
+                        <p className="text-lg text-gray-700 mb-2">Tu guía de trámites sin costos ocultos</p>
+                        <p className="text-sm text-gray-600 mb-6">Información clara, paso a paso. Sin gestores caros.</p>
+                        
+                        <div className="bg-white rounded-lg p-6 mb-6 border-2 border-blue-200">
+                            <h2 className="font-bold text-gray-900 mb-4">¿En qué país estás o vas a llegar?</h2>
+                            <div className="grid grid-cols-2 gap-4">
+                                <button
+                                    onClick={() => { setCountry('spain'); setStep('migration-type'); }}
+                                    className="p-4 border-2 border-gray-300 rounded-lg hover:border-blue-500 hover:bg-blue-50 transition font-semibold text-gray-900"
+                                >
+                                    🇪🇸 España
+                                </button>
+                                <button
+                                    onClick={() => { setCountry('chile'); setStep('migration-type'); }}
+                                    className="p-4 border-2 border-gray-300 rounded-lg hover:border-red-500 hover:bg-red-50 transition font-semibold text-gray-900"
+                                >
+                                    🇨🇱 Chile
+                                </button>
+                            </div>
+                        </div>
+
+                        <div className="bg-amber-50 border-l-4 border-amber-500 p-4 rounded">
+                            <p className="text-sm text-amber-900">
+                                <strong>Nota importante:</strong> Esta es información de utilidad pública. Verifica en sitios oficiales.
+                            </p>
+                        </div>
+                    </div>
+                );
+            }
+
+            if (step === 'migration-type') {
+                return (
+                    <div className="max-w-2xl mx-auto p-6">
+                        <button
+                            onClick={() => setStep('welcome')}
+                            className="mb-4 text-blue-600 hover:text-blue-800 font-semibold"
+                        >
+                            ← Volver
+                        </button>
+                        
+                        <h2 className="text-3xl font-bold text-gray-900 mb-2">¿Qué tipo de migrante eres?</h2>
+                        <p className="text-gray-600 mb-6">Selecciona tu situación</p>
+
+                        <div className="space-y-3">
+                            {migrationTypes.map(type => (
+                                <button
+                                    key={type.id}
+                                    onClick={() => {
+                                        setMigrationType(type.id);
+                                        setStep('guide');
+                                    }}
+                                    className="w-full p-4 bg-white border-2 border-gray-300 rounded-lg hover:border-blue-500 hover:bg-blue-50 transition text-left font-semibold text-gray-900"
+                                >
+                                    {type.label}
+                                </button>
+                            ))}
+                        </div>
+                    </div>
+                );
+            }
+
+            if (step === 'guide') {
+                let processKey = 'spain_refugee';
+                if (country === 'spain' && migrationType === 'student') processKey = 'spain_student_renewal';
+                if (country === 'chile') processKey = 'chile_arrival';
+
+                const process = processes[processKey];
+
+                return (
+                    <div className="max-w-3xl mx-auto p-6">
+                        <button
+                            onClick={() => { setStep('migration-type'); setCurrentProcess(0); }}
+                            className="mb-4 text-blue-600 hover:text-blue-800 font-semibold"
+                        >
+                            ← Cambiar opción
+                        </button>
+
+                        <h1 className="text-3xl font-bold text-gray-900 mb-6">{process.title}</h1>
+
+                        <div className="space-y-6">
+                            {process.steps.map((s, idx) => (
+                                <div
+                                    key={idx}
+                                    className={`border-2 rounded-lg p-6 cursor-pointer transition ${
+                                        idx === currentProcess
+                                            ? 'border-blue-500 bg-blue-50'
+                                            : 'border-gray-300 bg-white hover:border-gray-400'
+                                    }`}
+                                    onClick={() => setCurrentProcess(idx)}
+                                >
+                                    <div className="flex items-start gap-4">
+                                        <div className="flex-shrink-0">
+                                            <div className="flex items-center justify-center h-10 w-10 rounded-full bg-blue-600 text-white font-bold">
+                                                {s.number}
+                                            </div>
+                                        </div>
+                                        <div className="flex-grow">
+                                            <h3 className="text-xl font-bold text-gray-900 mb-2">{s.title}</h3>
+                                            <p className="text-gray-700 mb-4">{s.description}</p>
+
+                                            {idx === currentProcess && (
+                                                <div className="space-y-4">
+                                                    <div className="bg-white rounded p-4 border border-blue-200">
+                                                        <h4 className="font-semibold text-gray-900 mb-3">Detalles importantes:</h4>
+                                                        <ul className="space-y-2">
+                                                            {s.details.map((detail, i) => (
+                                                                <li key={i} className="text-sm text-gray-700 flex gap-2">
+                                                                    <span className="text-blue-600 font-bold">•</span>
+                                                                    {detail}
+                                                                </li>
+                                                            ))}
+                                                        </ul>
+                                                    </div>
+
+                                                    <div className="bg-indigo-50 border border-indigo-300 rounded p-4">
+                                                        <p className="text-sm font-semibold text-indigo-900 mb-2">📌 Enlaces útiles:</p>
+                                                        <p className="text-sm text-indigo-800">{s.links}</p>
+                                                    </div>
+
+                                                    <p className="text-xs text-gray-500">Fuente: {s.official}</p>
+                                                </div>
+                                            )}
+                                        </div>
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+
+                        <div className="mt-8 bg-green-50 border-2 border-green-300 rounded-lg p-6">
+                            <h3 className="font-bold text-green-900 mb-2">💡 Consejos</h3>
+                            <ul className="text-sm text-green-800 space-y-2">
+                                <li>✓ NUNCA pagues por información gratuita en sitios oficiales</li>
+                                <li>✓ Toma fotos de tus documentos</li>
+                                <li>✓ Guarda todos los resguardos</li>
+                                <li>✓ Pregunta sin miedo, es tu derecho</li>
+                            </ul>
+                        </div>
+                    </div>
+                );
+            }
+        }
+
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(<MigrantApp />);
+    </script>
+</body>
+</html>
